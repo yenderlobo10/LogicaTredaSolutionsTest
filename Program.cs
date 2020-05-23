@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace TredaSolutionsPruebaTeorica
 {
     class Program
     {
+        /// <summary>
+        /// Enumerable to type problems.
+        /// </summary>
         enum Problem
         {
             ONE, TWO, THREE
@@ -32,12 +29,15 @@ namespace TredaSolutionsPruebaTeorica
         }
 
 
+        // Run problems functions
+
         static void RunProblems()
         {
             RunProblemOne();
             RunProblemTwo();
+            RunProblemThree();
 
-            Console.WriteLine("\n\n >>> Developed by ... Yender Vargas <<<\n\n\n");
+            Console.WriteLine("\n\n >>> Thanks ... Developed by ... Yender Vargas <<<\n\n\n");
         }
 
         static void RunProblemOne()
@@ -64,11 +64,23 @@ namespace TredaSolutionsPruebaTeorica
             ShowProblemResult(Problem.TWO, result);
         }
 
+        static void RunProblemThree()
+        {
+            Console.WriteLine("\n:: Problema 3 ::\n");
 
-        // Problems functions
+            var text = ReadValue("Ingreso texto a transformar : ");
+
+            var result = ResolveProblemThree(text);
+
+            ShowProblemResult(Problem.THREE, result);
+        }
+
+
+        // Resolve problems functions
 
         /// <summary>
-        /// Dado un numero n encontrar todos los múltiplos de 3 y 5 menores al número dado.
+        /// Dado un numero n encontrar todos los múltiplos de 3 y 5 
+        /// menores al número dado.
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
@@ -96,7 +108,8 @@ namespace TredaSolutionsPruebaTeorica
 
         /// <summary>
         /// Dado un string separado por espacios, guiones y guiones bajos. 
-        /// Se debe implementar una función camel case que transforme la oración.
+        /// Se debe implementar una función camel case que transforme la 
+        /// oración.
         /// </summary>
         /// <param name="textToTransform"></param>
         /// <returns></returns>
@@ -114,16 +127,44 @@ namespace TredaSolutionsPruebaTeorica
                 if (!string.IsNullOrWhiteSpace(word))
                 {
                     textToTransform += word[0].ToString().ToUpper();
-                    textToTransform += word.Length > 1 ? word.Substring(1, word.Length-1) : "";
+
+                    textToTransform += word.Length > 1 ?
+                        word.Substring(1, word.Length - 1) :
+                        string.Empty;
                 }
             }
 
             return textSplit[0] + textToTransform;
         }
 
-        public static void ResolveProblemThree()
-        {
 
+        /// <summary>
+        /// Dada una frase, devolver la frase donde las palabras con mayor 
+        /// a 5 letras esten al revés.
+        /// </summary>
+        /// <param name="textToTransform"></param>
+        /// <returns></returns>
+        public static string ResolveProblemThree(string textToTransform)
+        {
+            if (string.IsNullOrWhiteSpace(textToTransform))
+            {
+                throw new ArgumentException("Texto no valido.");
+            }
+
+            var textSplit = textToTransform.Split(' ');
+            textToTransform = string.Empty;
+
+            foreach (var word in textSplit)
+            {
+                textToTransform += IsValidWordToReverse(word) ?
+                    ReverseWord(word) : // With linq word.Reverse()
+                    word;
+
+                textToTransform += " ";
+            }
+
+
+            return textToTransform;
         }
 
 
@@ -131,8 +172,23 @@ namespace TredaSolutionsPruebaTeorica
 
         static bool CheckMultiplo(int n, int m) => n % m == 0;
 
-        static bool IsValidTextFormatCamelCase(string text) => 
+        static bool IsValidTextFormatCamelCase(string text) =>
             Regex.IsMatch(text, @"[a-zA-Z\s-_]");
+
+        static bool IsValidWordToReverse(string word) => word.Length > 5;
+
+        static string ReverseWord(string word)
+        {
+            string reverse = string.Empty;
+
+            for (int i = (word.Length - 1); i >= 0; i--)
+            {
+                reverse += word[i];
+            }
+
+            return reverse;
+        }
+
 
 
         static string ReadValue(string message)
@@ -165,7 +221,8 @@ namespace TredaSolutionsPruebaTeorica
                         $"Texto convertido a came case : {replaces[0]}";
 
                 case Problem.THREE:
-                    return "=> ";
+                    return "=> " +
+                        $"El textto transformado : {replaces[0]}";
 
                 default:
                     throw new ArgumentException();
